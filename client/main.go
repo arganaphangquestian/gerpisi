@@ -46,7 +46,7 @@ func (m *model) calculate() {
 		return
 	}
 	*m = initialModel()
-	result, err := grpcClient.Add(context.Background(), &data.AddRequest{
+	result, _ := grpcClient.Add(context.Background(), &data.AddRequest{
 		A: int64(a),
 		B: int64(b),
 	})
