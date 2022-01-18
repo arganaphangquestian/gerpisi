@@ -1,14 +1,19 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 	"strings"
 
+	"github.com/arganaphangquestian/gerpisi/server/data"
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 var (
@@ -41,8 +46,12 @@ func (m *model) calculate() {
 		return
 	}
 	*m = initialModel()
+	result, err := grpcClient.Add(context.Background(), &data.AddRequest{
+		A: int64(a),
+		B: int64(b),
+	})
 	res := new(string)
-	*res = fmt.Sprintf("The result %d+%d=%d", a, b, a+b)
+	*res = fmt.Sprintf("The result %d+%d=%d", a, b, result.GetRes())
 	m.result = res
 }
 
@@ -159,7 +168,17 @@ func (m model) View() string {
 	return b.String()
 }
 
+var (
+	grpcClient data.CalculateClient
+)
+
 func main() {
+	con, err := grpc.Dial("0.0.0.0:8000", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Fatal("GRPC Client failed to connect to GRPC Server")
+	}
+	defer con.Close()
+	grpcClient = data.NewCalculateClient(con)
 	if err := tea.NewProgram(initialModel(), tea.WithAltScreen()).Start(); err != nil {
 		fmt.Printf("could not start program: %s\n", err)
 		os.Exit(1)
