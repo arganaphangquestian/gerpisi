@@ -15,9 +15,9 @@ func main() {
 	if err != nil {
 		log.Fatal("Make sure GRPC Server is Running")
 	}
-	s := service.Server{}
+	s := service.UserService{}
 	grpcServer := grpc.NewServer()
-	data.RegisterCalculateServer(grpcServer, &s)
+	data.RegisterAutheticationServer(grpcServer, &s)
 
 	fmt.Println("GRPC Server running at http://localhost:8000")
 	if err := grpcServer.Serve(network); err != nil {

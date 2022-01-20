@@ -4,15 +4,41 @@ option go_package = "github.com/arganaphangquestian/gerpisi/server/data";
 
 package data;
 
-message AddRequest {
-  int64 a = 1;
-  int64 b = 2;
+service Authetication {
+  rpc Login(LoginRequest) returns (LoginResponse) {}
+  rpc AddUser(AddUserRequest) returns (AddUserResponse) {}
+  rpc GetUsers(GetUsersRequest) returns (GetUsersResponse) {}
 }
 
-message AddResponse {
-  int64 res = 1;
+message LoginRequest {
+  string email = 1;
+  string password = 2;
 }
 
-service Calculate {
-  rpc Add(AddRequest) returns (AddResponse) {}
+message LoginResponse {
+  string access_token = 1;
+}
+
+message User {
+  optional string id = 1;
+  string name = 2;
+  string email = 3;
+  string password = 4;
+}
+
+message AddUserRequest {
+  string access_token = 1;
+  User user = 2;
+}
+
+message AddUserResponse {
+  string message = 1;
+  User user = 2;
+}
+
+message GetUsersRequest {}
+
+message GetUsersResponse {
+  string message = 1;
+  repeated User users = 2;
 }

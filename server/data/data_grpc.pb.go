@@ -14,84 +14,156 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// CalculateClient is the client API for Calculate service.
+// AutheticationClient is the client API for Authetication service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type CalculateClient interface {
-	Add(ctx context.Context, in *AddRequest, opts ...grpc.CallOption) (*AddResponse, error)
+type AutheticationClient interface {
+	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
+	AddUser(ctx context.Context, in *AddUserRequest, opts ...grpc.CallOption) (*AddUserResponse, error)
+	GetUsers(ctx context.Context, in *GetUsersRequest, opts ...grpc.CallOption) (*GetUsersResponse, error)
 }
 
-type calculateClient struct {
+type autheticationClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewCalculateClient(cc grpc.ClientConnInterface) CalculateClient {
-	return &calculateClient{cc}
+func NewAutheticationClient(cc grpc.ClientConnInterface) AutheticationClient {
+	return &autheticationClient{cc}
 }
 
-func (c *calculateClient) Add(ctx context.Context, in *AddRequest, opts ...grpc.CallOption) (*AddResponse, error) {
-	out := new(AddResponse)
-	err := c.cc.Invoke(ctx, "/data.Calculate/Add", in, out, opts...)
+func (c *autheticationClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
+	out := new(LoginResponse)
+	err := c.cc.Invoke(ctx, "/data.Authetication/Login", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// CalculateServer is the server API for Calculate service.
-// All implementations should embed UnimplementedCalculateServer
+func (c *autheticationClient) AddUser(ctx context.Context, in *AddUserRequest, opts ...grpc.CallOption) (*AddUserResponse, error) {
+	out := new(AddUserResponse)
+	err := c.cc.Invoke(ctx, "/data.Authetication/AddUser", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *autheticationClient) GetUsers(ctx context.Context, in *GetUsersRequest, opts ...grpc.CallOption) (*GetUsersResponse, error) {
+	out := new(GetUsersResponse)
+	err := c.cc.Invoke(ctx, "/data.Authetication/GetUsers", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// AutheticationServer is the server API for Authetication service.
+// All implementations should embed UnimplementedAutheticationServer
 // for forward compatibility
-type CalculateServer interface {
-	Add(context.Context, *AddRequest) (*AddResponse, error)
+type AutheticationServer interface {
+	Login(context.Context, *LoginRequest) (*LoginResponse, error)
+	AddUser(context.Context, *AddUserRequest) (*AddUserResponse, error)
+	GetUsers(context.Context, *GetUsersRequest) (*GetUsersResponse, error)
 }
 
-// UnimplementedCalculateServer should be embedded to have forward compatible implementations.
-type UnimplementedCalculateServer struct {
+// UnimplementedAutheticationServer should be embedded to have forward compatible implementations.
+type UnimplementedAutheticationServer struct {
 }
 
-func (UnimplementedCalculateServer) Add(context.Context, *AddRequest) (*AddResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Add not implemented")
+func (UnimplementedAutheticationServer) Login(context.Context, *LoginRequest) (*LoginResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
+}
+func (UnimplementedAutheticationServer) AddUser(context.Context, *AddUserRequest) (*AddUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddUser not implemented")
+}
+func (UnimplementedAutheticationServer) GetUsers(context.Context, *GetUsersRequest) (*GetUsersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUsers not implemented")
 }
 
-// UnsafeCalculateServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to CalculateServer will
+// UnsafeAutheticationServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to AutheticationServer will
 // result in compilation errors.
-type UnsafeCalculateServer interface {
-	mustEmbedUnimplementedCalculateServer()
+type UnsafeAutheticationServer interface {
+	mustEmbedUnimplementedAutheticationServer()
 }
 
-func RegisterCalculateServer(s grpc.ServiceRegistrar, srv CalculateServer) {
-	s.RegisterService(&Calculate_ServiceDesc, srv)
+func RegisterAutheticationServer(s grpc.ServiceRegistrar, srv AutheticationServer) {
+	s.RegisterService(&Authetication_ServiceDesc, srv)
 }
 
-func _Calculate_Add_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AddRequest)
+func _Authetication_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CalculateServer).Add(ctx, in)
+		return srv.(AutheticationServer).Login(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/data.Calculate/Add",
+		FullMethod: "/data.Authetication/Login",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CalculateServer).Add(ctx, req.(*AddRequest))
+		return srv.(AutheticationServer).Login(ctx, req.(*LoginRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// Calculate_ServiceDesc is the grpc.ServiceDesc for Calculate service.
+func _Authetication_AddUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AutheticationServer).AddUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/data.Authetication/AddUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AutheticationServer).AddUser(ctx, req.(*AddUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Authetication_GetUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUsersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AutheticationServer).GetUsers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/data.Authetication/GetUsers",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AutheticationServer).GetUsers(ctx, req.(*GetUsersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// Authetication_ServiceDesc is the grpc.ServiceDesc for Authetication service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var Calculate_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "data.Calculate",
-	HandlerType: (*CalculateServer)(nil),
+var Authetication_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "data.Authetication",
+	HandlerType: (*AutheticationServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Add",
-			Handler:    _Calculate_Add_Handler,
+			MethodName: "Login",
+			Handler:    _Authetication_Login_Handler,
+		},
+		{
+			MethodName: "AddUser",
+			Handler:    _Authetication_AddUser_Handler,
+		},
+		{
+			MethodName: "GetUsers",
+			Handler:    _Authetication_GetUsers_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
